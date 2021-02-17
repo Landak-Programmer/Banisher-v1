@@ -1,5 +1,6 @@
 package screens;
 
+import core.ImagePanel;
 import helper.PropertiesHelper;
 
 import javax.swing.*;
@@ -8,8 +9,13 @@ import java.awt.event.ActionListener;
 
 public abstract class Gui extends JFrame implements ActionListener {
 
+    protected ImagePanel imagePanel;
+    private int frameWidth = 1000;
+    private int frameHeight = 750;
+
     public Gui() {
         //don't mess up the order or it might initialize wrongly
+        imagePanel = ImagePanel.getInstance();
         setup();
         init();
         addComponent();
@@ -18,18 +24,35 @@ public abstract class Gui extends JFrame implements ActionListener {
 
     public abstract void setup();
 
-    private void init() {
+    protected void init() {
         //basically base jFrame
         setTitle(PropertiesHelper.getString("title"));
         setLayout(new BorderLayout());
         getContentPane().setBackground(Color.white);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1000, 750);
-        setLocation(300, 40);
+        setSize(frameWidth, frameHeight);
+        setResizable(false);
+        setLocationRelativeTo(null);
         setVisible(true);
     }
 
     public abstract void addComponent();
 
     public abstract void addActionListener();
+
+    public int getFrameWidth() {
+        return frameWidth;
+    }
+
+    public void setFrameWidth(int frameWidth) {
+        this.frameWidth = frameWidth;
+    }
+
+    public int getFrameHeight() {
+        return frameHeight;
+    }
+
+    public void setFrameHeight(int frameHeight) {
+        this.frameHeight = frameHeight;
+    }
 }
