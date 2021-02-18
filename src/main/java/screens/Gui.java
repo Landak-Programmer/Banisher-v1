@@ -20,6 +20,7 @@ public abstract class Gui extends JFrame implements ActionListener {
         init();
         addComponent();
         addActionListener();
+        start();
     }
 
     public abstract void setup();
@@ -39,6 +40,9 @@ public abstract class Gui extends JFrame implements ActionListener {
     public abstract void addComponent();
 
     public abstract void addActionListener();
+
+    // FIXME: temp for testing
+    public abstract void start();
 
     public int getFrameWidth() {
         return frameWidth;

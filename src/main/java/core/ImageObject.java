@@ -1,32 +1,46 @@
 package core;
 
-import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public class ImageObject {
 
-    private Image image;
+    public static enum Command {
+        DEFAULT,
+        FADE_IN,
+        FADE_OUT
+    }
+
+    private BufferedImage image;
     private Integer pos_x;
     private Integer pos_y;
     private String referenceKey;
     private Boolean isMovable;
+    private Integer fadeSpeed;
+    private Float opacity;
+    private Command command = Command.DEFAULT;
 
-    public ImageObject(Image image, Integer pos_x, Integer pos_y, String referenceKey) {
-        this(image, pos_x, pos_y, referenceKey, false);
+    public ImageObject(BufferedImage image, Integer pos_x, Integer pos_y, String referenceKey) {
+        this(image, pos_x, pos_y, referenceKey, 1.0f);
     }
 
-    public ImageObject(Image image, Integer pos_x, Integer pos_y, String referenceKey, Boolean isMovable) {
+    public ImageObject(BufferedImage image, Integer pos_x, Integer pos_y, String referenceKey, Float opacity) {
+        this(image, pos_x, pos_y, referenceKey, opacity, false);
+    }
+
+    public ImageObject(BufferedImage image, Integer pos_x, Integer pos_y, String referenceKey, Float opacity, Boolean isMovable) {
         this.image = image;
         this.pos_x = pos_x;
         this.pos_y = pos_y;
         this.referenceKey = referenceKey;
         this.isMovable = isMovable;
+        this.opacity = opacity;
     }
 
-    public Image getImage() {
+    public BufferedImage getImage() {
         return image;
     }
 
-    public void setImage(Image image) {
+    public void setImage(BufferedImage image) {
         this.image = image;
     }
 
@@ -60,6 +74,30 @@ public class ImageObject {
 
     public void setMovable(Boolean movable) {
         isMovable = movable;
+    }
+
+    public Integer getFadeSpeed() {
+        return fadeSpeed;
+    }
+
+    public void setFadeSpeed(Integer fadeSpeed) {
+        this.fadeSpeed = fadeSpeed;
+    }
+
+    public Float getOpacity() {
+        return opacity;
+    }
+
+    public void setOpacity(Float opacity) {
+        this.opacity = opacity;
+    }
+
+    public Command getCommand() {
+        return command;
+    }
+
+    public void setCommand(Command command) {
+        this.command = command;
     }
 }
 

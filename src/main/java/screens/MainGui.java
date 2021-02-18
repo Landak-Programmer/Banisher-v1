@@ -1,11 +1,10 @@
 package screens;
 
 import core.BufferedImageWrapper;
-import core.ImagePanel;
+import core.ImageObject;
 import helper.PropertiesHelper;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
@@ -41,6 +40,18 @@ public class MainGui extends Gui {
     @Override
     public void addActionListener() {
 
+    }
+
+    @Override
+    public void start() {
+        // do stuff
+        boolean test = false;
+        while (true) {
+            if (!test) {
+                test = true;
+                imagePanel.triggerFadeImageEvent("homepage", 15, ImageObject.Command.FADE_OUT);
+            }
+        }
     }
 
 

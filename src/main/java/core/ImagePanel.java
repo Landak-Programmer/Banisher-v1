@@ -2,9 +2,13 @@ package core;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class ImagePanel extends JPanel {
 
@@ -19,7 +23,7 @@ public class ImagePanel extends JPanel {
     private ArrayList<ImageObject> images = new ArrayList<>();
 
     public ImagePanel() {
-        addMouseMotionListener(new MouseMotionHandler());
+        // addMouseMotionListener(new MouseMotionHandler());
         setBackground(BACKGROUND);
     }
 
@@ -34,7 +38,9 @@ public class ImagePanel extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         for (ImageObject image : images) {
-            g.drawImage(image.getImage(), image.getPos_x(), image.getPos_y(), this);
+            Graphics2D g2d = (Graphics2D) g;
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, image.getOpacity()));
+            g2d.drawImage(image.getImage(), image.getPos_x(), image.getPos_y(), this);
         }
 
         // not needed
@@ -63,16 +69,24 @@ public class ImagePanel extends JPanel {
         repaint();
     }
 
-    public void addImage(Image image, String referenceKey) {
-        addImage(image, 0, 0, referenceKey, false);
+    public void addImage(BufferedImage image, String referenceKey) {
+        addImage(image, referenceKey, false);
     }
 
-    public void addImage(Image image, Integer pos_x, Integer pos_y, String referenceKey) {
-        addImage(image, pos_x, pos_y, referenceKey, false);
+    public void addImage(BufferedImage image, String referenceKey, Boolean hide) {
+        if (hide) {
+            addImage(image, 0, 0, referenceKey, 0.00f);
+        } else {
+            addImage(image, 0, 0, referenceKey, 1.0f);
+        }
     }
 
-    public void addImage(Image image, Integer pos_x, Integer pos_y, String referenceKey, Boolean isMovable) {
-        ImageObject o = new ImageObject(image, pos_x, pos_y, referenceKey, isMovable);
+    public void addImage(BufferedImage image, Integer pos_x, Integer pos_y, String referenceKey, Float opacity) {
+        addImage(image, pos_x, pos_y, referenceKey, opacity, false);
+    }
+
+    public void addImage(BufferedImage image, Integer pos_x, Integer pos_y, String referenceKey, Float opacity, Boolean isMovable) {
+        ImageObject o = new ImageObject(image, pos_x, pos_y, referenceKey, opacity, isMovable);
         images.add(o);
         repaint();
     }
@@ -97,7 +111,18 @@ public class ImagePanel extends JPanel {
         return null;
     }
 
-    // FIXME: let make it work now before we actually do refactor
+    // TODO: support fade speed
+    public void triggerFadeImageEvent(String referenceKey, Integer fadeSpeed, ImageObject.Command command) {
+        ImageObject img = find(referenceKey);
+        ImageObject tempImg = img;
+        // FIXME: FIX THIS STUPIDITY
+        tempImg.setFadeSpeed(fadeSpeed);
+        tempImg.setCommand(command);
+        updateDataDirectlyToArray(img, tempImg);
+        processFadeImages(tempImg);
+    }
+
+    /*// FIXME: let make it work now before we actually do refactor
     public class MouseMotionHandler extends MouseMotionAdapter {
 
         public void mouseDragged(MouseEvent e) {
@@ -108,7 +133,7 @@ public class ImagePanel extends JPanel {
 
         public void mouseMoved(MouseEvent e) {
         }
-    }
+    }*/
 
     // not needed for now
     /*private ImageObject findPointImage(ArrayList<ImageObject> list) {
@@ -135,4 +160,58 @@ public class ImagePanel extends JPanel {
 
         return toReturn;
     }*/
+
+    private void processFadeImages(ImageObject fadeImage) {
+
+        ActionListener fadeListener = new ActionListener() {
+
+            float transparency = fadeImage.getOpacity();
+            float offset = .01f;
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // FIXME:
+                int index = images.indexOf(fadeImage);
+
+                if (ImageObject.Command.FADE_OUT.equals(fadeImage.getCommand())) {
+                    if (transparency >= 0.00f) {
+                        transparency -= offset;
+                    }
+                    if (transparency <= 0f) {
+                        images.get(index).setOpacity(0.00f);
+                        images.get(index).setCommand(ImageObject.Command.DEFAULT);
+                    }
+                } else if (ImageObject.Command.FADE_IN.equals(fadeImage.getCommand())) {
+                    if (transparency <= 1.00f) {
+                        transparency += offset;
+                    }
+                    if (transparency >= 1.00f) {
+                        images.get(index).setOpacity(1.00f);
+                        images.get(index).setCommand(ImageObject.Command.DEFAULT);
+                    }
+                }
+                // don't render illegal alpha
+                if (transparency >= 0.01f && transparency <= 0.99f) {
+                    // System.out.println(transparency);
+                    images.get(index).setOpacity(transparency);
+                }
+                repaint();
+            }
+        };
+        Timer timer = new Timer(fadeImage.getFadeSpeed(), fadeListener);
+        timer.start();
+        // default 3 sec for the event - TODO:  make calculation
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        timer.stop();
+    }
+
+    private void updateDataDirectlyToArray(ImageObject persistance, ImageObject update) {
+        images.remove(persistance);
+        images.add(update);
+    }
+
 }
