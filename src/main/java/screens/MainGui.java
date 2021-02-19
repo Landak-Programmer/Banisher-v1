@@ -3,6 +3,7 @@ package screens;
 import core.BufferedImageWrapper;
 import core.ImageObject;
 import helper.PropertiesHelper;
+import screens.component.panels.MenuOptionPanel;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -12,6 +13,8 @@ import java.io.File;
 import java.io.IOException;
 
 public class MainGui extends Gui {
+
+    private MenuOptionPanel menuOptionPanel;
 
     public MainGui() {
         super();
@@ -25,6 +28,7 @@ public class MainGui extends Gui {
             imagePanel.addImage(img.get(), "homepage");
             super.setFrameWidth(bg.getWidth());
             super.setFrameHeight(bg.getHeight());
+            menuOptionPanel = new MenuOptionPanel();
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -34,7 +38,26 @@ public class MainGui extends Gui {
     @Override
     public void addComponent() {
         imagePanel.repaint();
-        add(imagePanel, BorderLayout.CENTER);
+        /*
+            TODO: refactor
+            NOTE:
+            ipadx = width
+            ipady = height
+
+            Insets = Margin
+         */
+        add(menuOptionPanel,
+                new GridBagConstraints(0, 0, 100, 100,
+                        1, 1, GridBagConstraints.WEST,
+                        GridBagConstraints.NONE, new Insets(200, 200,
+                        0, 0), 200, 400));
+        // must be last!
+        add(imagePanel,
+                new GridBagConstraints(0, 0, 100, 100,
+                        1, 1, GridBagConstraints.CENTER,
+                        GridBagConstraints.BOTH, new Insets(0, 0,
+                        0, 0), 0, 0));
+
     }
 
     @Override
@@ -49,7 +72,7 @@ public class MainGui extends Gui {
         while (true) {
             if (!test) {
                 test = true;
-                imagePanel.triggerFadeImageEvent("homepage", 15, ImageObject.Command.FADE_OUT);
+                // imagePanel.triggerFadeImageEvent("homepage", 15, ImageObject.Command.FADE_OUT);
             }
         }
     }

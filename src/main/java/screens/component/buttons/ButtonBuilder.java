@@ -1,4 +1,6 @@
-package screens.component;
+package screens.component.buttons;
+
+import screens.component.FontBuilder;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,9 +16,7 @@ public class ButtonBuilder {
         return new ButtonBuilder();
     }
 
-    public JButton build() {
-
-        JButton button = new JButton();
+    public void build(JButton button) {
 
         if (text != null) {
             button.setText(text);
@@ -25,8 +25,6 @@ public class ButtonBuilder {
         button.setBackground(backgroundColor);
         button.setFont(font);
         button.setForeground(foregroundColor);
-
-        return button;
     }
 
     public ButtonBuilder setText(String text) {

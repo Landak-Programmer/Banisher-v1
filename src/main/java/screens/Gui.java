@@ -28,8 +28,8 @@ public abstract class Gui extends JFrame implements ActionListener {
     protected void init() {
         //basically base jFrame
         setTitle(PropertiesHelper.getString("title"));
-        setLayout(new BorderLayout());
-        getContentPane().setBackground(Color.white);
+        setLayout(new GridBagLayout());
+        setBackground(Color.white);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(frameWidth, frameHeight);
         setResizable(false);

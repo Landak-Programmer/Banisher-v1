@@ -1,4 +1,6 @@
-package screens.component;
+package screens.component.labels;
+
+import screens.component.FontBuilder;
 
 import javax.swing.*;
 import java.awt.*;
