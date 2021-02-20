@@ -1,13 +1,17 @@
 package screens;
 
 import core.ImagePanel;
+import helper.GlobalHolderHelper;
 import helper.PropertiesHelper;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
-public abstract class Gui extends JFrame implements ActionListener {
+public abstract class Gui extends JFrame {
+
+    // hack
+    private ArrayList<Component> activeComponent = new ArrayList<>();
 
     protected ImagePanel imagePanel;
     private int frameWidth = 1000;
@@ -16,10 +20,10 @@ public abstract class Gui extends JFrame implements ActionListener {
     public Gui() {
         //don't mess up the order or it might initialize wrongly
         imagePanel = ImagePanel.getInstance();
+        GlobalHolderHelper.setRoutes(new Routes(this));
         setup();
         init();
         addComponent();
-        addActionListener();
         start();
     }
 
@@ -39,7 +43,7 @@ public abstract class Gui extends JFrame implements ActionListener {
 
     public abstract void addComponent();
 
-    public abstract void addActionListener();
+    public abstract void addComponent(Routes.Route route);
 
     // FIXME: temp for testing
     public abstract void start();
@@ -58,5 +62,24 @@ public abstract class Gui extends JFrame implements ActionListener {
 
     public void setFrameHeight(int frameHeight) {
         this.frameHeight = frameHeight;
+    }
+
+    protected void removeActiveComponent() {
+        for (Component component : activeComponent) {
+            remove(component);
+        }
+    }
+
+    protected void addActiveComponent(Component component) {
+        activeComponent.add(component);
+    }
+
+    protected void addImagePanelComponent() {
+        add(imagePanel,
+                new GridBagConstraints(0, 0, 100, 100,
+                        1, 1, GridBagConstraints.CENTER,
+                        GridBagConstraints.BOTH, new Insets(0, 0,
+                        0, 0), 0, 0));
+        activeComponent.add(imagePanel);
     }
 }

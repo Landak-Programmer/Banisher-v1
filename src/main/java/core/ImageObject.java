@@ -15,7 +15,7 @@ public class ImageObject {
     private Integer pos_y;
     private String referenceKey;
     private Boolean isMovable;
-    private Integer fadeSpeed;
+    private Integer fadeDelay;
     private Float opacity;
     private Command command = Command.DEFAULT;
 
@@ -76,12 +76,12 @@ public class ImageObject {
         isMovable = movable;
     }
 
-    public Integer getFadeSpeed() {
-        return fadeSpeed;
+    public Integer getFadeDelay() {
+        return fadeDelay;
     }
 
-    public void setFadeSpeed(Integer fadeSpeed) {
-        this.fadeSpeed = fadeSpeed;
+    public void setFadeDelay(Integer fadeDelay) {
+        this.fadeDelay = fadeDelay;
     }
 
     public Float getOpacity() {

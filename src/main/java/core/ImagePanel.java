@@ -1,16 +1,22 @@
 package core;
 
+import helper.PropertiesHelper;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
-public class ImagePanel extends JPanel {
+public class ImagePanel extends JLayeredPane {
+
+    private final String defaultPicKeyPage = "default";
+    private Boolean lockFade = false;
+    private String currentBackgroundKeyPage = null;
 
     //FIXME
     int x, y;
@@ -24,6 +30,12 @@ public class ImagePanel extends JPanel {
 
     public ImagePanel() {
         // addMouseMotionListener(new MouseMotionHandler());
+        try {
+            BufferedImage img = ImageIO.read(new File(PropertiesHelper.getString("apps.default.img.path")));
+            addImage(img, "default", true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         setBackground(BACKGROUND);
     }
 
@@ -88,6 +100,7 @@ public class ImagePanel extends JPanel {
     public void addImage(BufferedImage image, Integer pos_x, Integer pos_y, String referenceKey, Float opacity, Boolean isMovable) {
         ImageObject o = new ImageObject(image, pos_x, pos_y, referenceKey, opacity, isMovable);
         images.add(o);
+        setDefaultBackgroundKey(referenceKey);
         repaint();
     }
 
@@ -107,16 +120,30 @@ public class ImagePanel extends JPanel {
                 return image;
             }
         }
-
-        return null;
+        return find(defaultPicKeyPage);
     }
 
-    // TODO: support fade speed
-    public void triggerFadeImageEvent(String referenceKey, Integer fadeSpeed, ImageObject.Command command) {
+    /*public void triggerFadeImageEvent(String referenceKey, Integer fadeDelay, ImageObject.Command command) {
+        triggerFadeImageEvent(referenceKey, fadeDelay, command, false);
+    }*/
+
+    public void triggerFadeImageEvent(Integer fadeDelay, ImageObject.Command command) {
+        triggerFadeImageEvent(currentBackgroundKeyPage, fadeDelay, command, false);
+    }
+
+    public void triggerFadeImageEvent(Integer fadeDelay, ImageObject.Command command, Boolean updateBackground) {
+        triggerFadeImageEvent(currentBackgroundKeyPage, fadeDelay, command, updateBackground);
+    }
+
+    // todo: Support await
+    public void triggerFadeImageEvent(String referenceKey, Integer fadeDelay, ImageObject.Command command, Boolean updateBackground) {
+        if (updateBackground) {
+            setCurrentBackgroundKeyPage(referenceKey);
+        }
         ImageObject img = find(referenceKey);
         ImageObject tempImg = img;
         // FIXME: FIX THIS STUPIDITY
-        tempImg.setFadeSpeed(fadeSpeed);
+        tempImg.setFadeDelay(fadeDelay);
         tempImg.setCommand(command);
         updateDataDirectlyToArray(img, tempImg);
         processFadeImages(tempImg);
@@ -170,7 +197,6 @@ public class ImagePanel extends JPanel {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                // FIXME:
                 int index = images.indexOf(fadeImage);
 
                 if (ImageObject.Command.FADE_OUT.equals(fadeImage.getCommand())) {
@@ -192,26 +218,30 @@ public class ImagePanel extends JPanel {
                 }
                 // don't render illegal alpha
                 if (transparency >= 0.01f && transparency <= 0.99f) {
-                    // System.out.println(transparency);
                     images.get(index).setOpacity(transparency);
+                } else {
+                    ((Timer) e.getSource()).stop();
                 }
                 repaint();
             }
         };
-        Timer timer = new Timer(fadeImage.getFadeSpeed(), fadeListener);
+        Timer timer = new Timer(fadeImage.getFadeDelay(), fadeListener);
         timer.start();
-        // default 3 sec for the event - TODO:  make calculation
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        timer.stop();
     }
 
     private void updateDataDirectlyToArray(ImageObject persistance, ImageObject update) {
         images.remove(persistance);
         images.add(update);
+    }
+
+    public void setDefaultBackgroundKey(String referenceKey) {
+        if (currentBackgroundKeyPage == null && !defaultPicKeyPage.equals(referenceKey)) {
+            setCurrentBackgroundKeyPage(referenceKey);
+        }
+    }
+
+    private void setCurrentBackgroundKeyPage(String referenceKey) {
+        currentBackgroundKeyPage = referenceKey;
     }
 
 }
