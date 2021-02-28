@@ -1,15 +1,10 @@
 package core;
 
-import helper.PropertiesHelper;
-
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class ImagePanel extends JLayeredPane {
@@ -30,12 +25,6 @@ public class ImagePanel extends JLayeredPane {
 
     public ImagePanel() {
         // addMouseMotionListener(new MouseMotionHandler());
-        try {
-            BufferedImage img = ImageIO.read(new File(PropertiesHelper.getString("apps.default.img.path")));
-            addImage(img, "default", true);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         setBackground(BACKGROUND);
     }
 

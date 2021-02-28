@@ -2,7 +2,6 @@ package screens.component.textarea;
 
 import screens.component.FontBuilder;
 
-import javax.swing.*;
 import java.awt.*;
 
 public class GameTextArea extends FadeTextArea {
@@ -15,6 +14,7 @@ public class GameTextArea extends FadeTextArea {
         setWrapStyleWord(true);
         setOpaque(false);
         setEditable(false);
+        setForeground(Color.WHITE);
     }
 
     @Override

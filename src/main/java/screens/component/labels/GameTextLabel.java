@@ -8,8 +8,8 @@ public class GameTextLabel extends FadeLabel {
 
     public GameTextLabel() {
         // fixme
-        Font font = FontBuilder.create().setSize(50).build();
-        LabelBuilder.create().setFont(font).build(this);
+        Font font = FontBuilder.create().setSize(55).build();
+        LabelBuilder.create().setFont(font).setColor(Color.WHITE).build(this);
     }
 
     @Override

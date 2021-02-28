@@ -1,3 +1,4 @@
+import core.ResourcesManager;
 import helper.GlobalHolderHelper;
 import helper.PropertiesHelper;
 import screens.Gui;
@@ -8,6 +9,7 @@ public class Apps {
     public static void main(String[] args) {
         try {
             PropertiesHelper.init();
+            ResourcesManager.init();
             new GlobalHolderHelper();
         } catch (Exception e) {
             System.out.println(String.format("Exception fail to start due to: %s", e.getLocalizedMessage()));

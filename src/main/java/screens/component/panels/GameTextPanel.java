@@ -1,5 +1,6 @@
 package screens.component.panels;
 
+import core.ResourcesManager;
 import core.ScriptReader;
 import core.objects.ScriptObject;
 import screens.component.labels.GameTextLabel;
@@ -35,6 +36,7 @@ public class GameTextPanel extends FadePanel {
         add(conversationLabel, BorderLayout.CENTER);
 
         conversationLabel.addMouseListener(new GameTextBoxAdapter(this));
+        setOpaque(false);
     }
 
     private static class GameTextBoxAdapter extends MouseAdapter {
@@ -53,7 +55,11 @@ public class GameTextPanel extends FadePanel {
                 ScriptObject sco = gameTextPanel.scripts.get(gameTextPanel.itr);
                 if (currentSpeaker == null || !currentSpeaker.equals(sco.getActor())) {
                     currentSpeaker = sco.getActor();
-                    playerLabel.loadPromiseObject(currentSpeaker);
+                    if (currentSpeaker.equals("Narrator")) {
+                        playerLabel.loadPromiseObject(currentSpeaker);
+                    } else {
+                        playerLabel.loadPromiseObject(currentSpeaker);
+                    }
                     playerLabel.fade(1, "fadeswap");
                 }
                 conversationLabel.loadPromiseObject(sco.getConv());

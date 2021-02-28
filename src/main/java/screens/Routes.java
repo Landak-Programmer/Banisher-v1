@@ -11,11 +11,11 @@ public class Routes implements ActionListener {
     public enum Route {
         MAIN_MENU,
         GAME,
+        LOADGAME,
         DEFAULT
     }
 
     private static Gui gui;
-    // private static ArrayList<RouteButton> routeButtons = new ArrayList<>();
 
     public Routes(Gui gui) {
         Routes.gui = gui;
@@ -29,6 +29,8 @@ public class Routes implements ActionListener {
                 goToGame();
             } else if (Route.MAIN_MENU.equals(source.getRoute())) {
                 goToMainMenu();
+            } else if (Route.LOADGAME.equals(source.getRoute())) {
+                goToLoadGame();
             }
         }
 
@@ -38,17 +40,16 @@ public class Routes implements ActionListener {
         gui.imagePanel.triggerFadeImageEvent(5, ImageObject.Command.FADE_OUT);
     }
 
-    /*public static void addRouteButton(RouteButton routeButton) {
-        routeButtons.add(routeButton);
-    }*/
-
     /**
      * Return action to go to game
      */
     public static void goToGame() {
         fadeCurrent();
         // render image - TODO: load based on save file
-        gui.imagePanel.triggerFadeImageEvent("game", 5, ImageObject.Command.FADE_IN, true);
+        // fixme: dont hardcode game - based on load file
+        gui.imagePanel.triggerFadeImageEvent("school", 5, ImageObject.Command.FADE_IN, true);
+        // fixme
+        gui.imagePanel.triggerFadeImageEvent("textbox", 5, ImageObject.Command.FADE_IN, false);
         gui.addComponent(Route.GAME);
     }
 
@@ -59,5 +60,14 @@ public class Routes implements ActionListener {
         fadeCurrent();
         gui.imagePanel.triggerFadeImageEvent("homepage", 5, ImageObject.Command.FADE_IN, true);
         gui.addComponent(Route.MAIN_MENU);
+    }
+
+    /**
+     * Return action to go to main menu
+     */
+    public static void goToLoadGame() {
+        fadeCurrent();
+        gui.imagePanel.triggerFadeImageEvent("loadgame", 5, ImageObject.Command.FADE_IN, true);
+        gui.addComponent(Route.LOADGAME);
     }
 }
