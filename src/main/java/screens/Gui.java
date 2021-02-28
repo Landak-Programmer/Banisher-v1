@@ -3,6 +3,7 @@ package screens;
 import core.ImagePanel;
 import helper.GlobalHolderHelper;
 import helper.PropertiesHelper;
+import screens.component.GridBagBuilder;
 
 import javax.swing.*;
 import java.awt.*;
@@ -75,11 +76,10 @@ public abstract class Gui extends JFrame {
     }
 
     protected void addImagePanelComponent() {
-        add(imagePanel,
-                new GridBagConstraints(0, 0, 100, 100,
-                        1, 1, GridBagConstraints.CENTER,
-                        GridBagConstraints.BOTH, new Insets(0, 0,
-                        0, 0), 0, 0));
+        add(imagePanel, GridBagBuilder.create().build(
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                3, 3, 0, 0,
+                0, 0, 0, 0));
         activeComponent.add(imagePanel);
     }
 }

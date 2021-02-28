@@ -3,10 +3,13 @@ package screens;
 import core.BufferedImageWrapper;
 import core.ImageObject;
 import helper.PropertiesHelper;
+import screens.component.GridBagBuilder;
 import screens.component.panels.GamePlayPanel;
+import screens.component.panels.GameTextPanel;
 import screens.component.panels.MenuOptionPanel;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -15,8 +18,10 @@ import java.util.ArrayList;
 
 public class MainGui extends Gui {
 
-    private MenuOptionPanel menuOptionPanel;
-    private GamePlayPanel gamePlayPanel;
+    // ugly...
+    private JPanel menuOptionPanel;
+    private JPanel gamePlayPanel;
+    private JPanel gameTextPanel;
 
     public MainGui() {
         super();
@@ -33,6 +38,7 @@ public class MainGui extends Gui {
             super.setFrameHeight(bg.getHeight());
             menuOptionPanel = new MenuOptionPanel();
             gamePlayPanel = new GamePlayPanel();
+            gameTextPanel = new GameTextPanel();
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -65,23 +71,31 @@ public class MainGui extends Gui {
 
     private void injectMainMenuComponent() {
 
-        add(menuOptionPanel,
-                new GridBagConstraints(0, 0, 100, 100,
-                        1, 1, GridBagConstraints.WEST,
-                        GridBagConstraints.NONE, new Insets(200, 250,
-                        0, 0), 100, 100));
+        add(menuOptionPanel, GridBagBuilder.create().build(
+                GridBagConstraints.WEST, GridBagConstraints.NONE,
+                0, 0, 100, 100,
+                250, 0, 200, 0));
+
+        // don't forgot
         addActiveComponent(menuOptionPanel);
         addImagePanelComponent();
     }
 
     private void injectGameComponent() {
 
-        add(gamePlayPanel,
-                new GridBagConstraints(0, 0, 100, 100,
-                        1, 1, GridBagConstraints.WEST,
-                        GridBagConstraints.NONE, new Insets(200, 250,
-                        0, 0), 100, 100));
+        add(gamePlayPanel, GridBagBuilder.create().build(
+                GridBagConstraints.WEST, GridBagConstraints.NONE, 1, 1,
+                100, 100,
+                250, 0, 200, 250));
+
+        add(gameTextPanel, GridBagBuilder.create().build(
+                GridBagConstraints.PAGE_START, GridBagConstraints.NONE,
+                3, 1, getFrameWidth(), getFrameHeight(),
+                0, 0, 600, 30)); // fixme: don't hardcode height/width padding
+
+        // don't forgot
         addActiveComponent(gamePlayPanel);
+        addActiveComponent(gameTextPanel);
         addImagePanelComponent();
     }
 

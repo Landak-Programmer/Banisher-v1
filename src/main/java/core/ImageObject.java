@@ -4,7 +4,8 @@ import java.awt.image.BufferedImage;
 
 public class ImageObject {
 
-    public static enum Command {
+    // TODO: refactor later
+    public enum Command {
         DEFAULT,
         FADE_IN,
         FADE_OUT

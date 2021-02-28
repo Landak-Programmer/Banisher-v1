@@ -16,17 +16,15 @@ public class LabelBuilder {
         return new LabelBuilder();
     }
 
-    public JLabel build() {
-        JLabel labelObject = new JLabel(label);
+    public void build(JLabel jLabel) {
+        jLabel.setText(label);
 
-        labelObject.setFont(font);
-        labelObject.setForeground(color);
+        jLabel.setFont(font);
+        jLabel.setForeground(color);
 
         if (horizontalAligment != null) {
-            labelObject.setHorizontalAlignment(horizontalAligment);
+            jLabel.setHorizontalAlignment(horizontalAligment);
         }
-
-        return labelObject;
     }
 
     public LabelBuilder setLabel(String label) {

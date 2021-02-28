@@ -9,7 +9,8 @@ import java.awt.*;
 public class GamePlayPanel extends JPanel {
 
     public GamePlayPanel() {
-        super(new GridLayout(1, 1, 0, 0));
+        super();
+        super.setLayout(new GridLayout(1, 1, 0, 0));
         JButton mainMenu = new HoverButton("Main Menu", Routes.Route.MAIN_MENU).setBackgroundColour(Color.GREEN);
         PanelBuilder.create().setBackgroundColor(Color.GRAY).build(this);
         add(mainMenu);

@@ -2,7 +2,7 @@ package core;
 
 import java.awt.image.BufferedImage;
 
-public class BufferedImageWrapper implements Component<BufferedImage> {
+public class BufferedImageWrapper {
 
     private BufferedImage bufferedImage;
 
@@ -10,7 +10,6 @@ public class BufferedImageWrapper implements Component<BufferedImage> {
         this.bufferedImage = bufferedImage;
     }
 
-    @Override
     public BufferedImage get() {
         return bufferedImage;
     }
